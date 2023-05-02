@@ -3,11 +3,12 @@
 import React from 'react';
 import { showLabel, hideLabel } from '../../utilities/utilities'; // ============= Input fields animation
 
-const InputLabel = ({name, label}) => {
+const InputLabel = ({name, label, extraClass}) => {
+    const classList = `${extraClass} flex relative mt-4`;
     return (
-        <label htmlFor={name} className='flex relative mt-4'>
+        <label htmlFor={name} className={classList}>
             <span className='bg-white px-2 absolute top-0 translate-y-1/4 left-2 pointer-events-none transition duration-300'>{label}</span>
-            <input onFocus={hideLabel} onBlur={showLabel} onMouseEnter={hideLabel} onMouseLeave={showLabel} type={name} name={name} className='border border-gray-400 rounded-full flex-1 px-4 py-1' min="8" max="16"/>
+            <input onFocus={hideLabel} onBlur={showLabel} onMouseEnter={hideLabel} onMouseLeave={showLabel} type={name} name={name} className="border border-gray-400 rounded-full flex-1 px-4 py-1" min="6" max="16"/>
         </label>
     );
 };

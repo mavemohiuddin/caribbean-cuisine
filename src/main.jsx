@@ -12,6 +12,13 @@ import Home from './Components/Pages/Home';
 import Login from './Components/Pages/Login';
 import Register from './Components/Pages/Register';
 import Profile from './Components/Pages/Profile';
+import Blogs from './Components/Pages/Blogs';
+import Recipies from './Components/Pages/Recipies';
+import Chefs from './Components/Pages/Chefs';
+import About from './Components/Pages/About';
+import Contact from './Components/Pages/Contact';
+import Terms from './Components/Pages/Terms';
+import Policy from './Components/Pages/Policy';
 
 const router = createBrowserRouter([
     {
@@ -33,6 +40,34 @@ const router = createBrowserRouter([
             {
                 path: "/profile",
                 element: <Profile></Profile>
+            },
+            {
+                path: "/blogs",
+                element: <Blogs></Blogs>
+            },
+            {
+                path: "/recipies",
+                element: <Recipies></Recipies>
+            },
+            {
+                path: "/chefs",
+                element: <Chefs></Chefs>
+            },
+            {
+                path: "/about",
+                element: <About></About>
+            },
+            {
+                path: "/contact",
+                element: <Contact></Contact>
+            },
+            {
+                path: "/terms",
+                element: <Terms></Terms>
+            },
+            {
+                path: "/policy",
+                element: <Policy></Policy>
             },
             {
                 path: "*",

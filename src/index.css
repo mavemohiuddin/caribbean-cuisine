@@ -10,6 +10,13 @@
     transition: all ease;
     animation: pulse 5s infinite both;
 }
+button:disabled {
+    cursor: not-allowed;
+    background-color: gray!important;
+}
+button:disabled > *.absolute {
+    background: gray!important;
+}
 @keyframes flow {
     0% {left: -20%;}
     50% {left: 90%}
