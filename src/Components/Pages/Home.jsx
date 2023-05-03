@@ -1,9 +1,17 @@
 /* eslint-disable no-unused-vars */
 import { BanknotesIcon, CircleStackIcon, ShoppingBagIcon } from '@heroicons/react/24/solid';
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { homeHeroBannerPc } from '../../assets/images';
 
 const Home = () => {
+    const [allChefs, setAllChefs] = useState([]);
+
+    useEffect(()=>{
+        fetch("./Chefs.json")
+            .then(res=>res.json())
+            .then(data=>setAllChefs(data))
+    },[])
     return (
         <div className=''>
             <section className='h-96 bg-white flex shadow-lg rounded-xl overflow-hidden relative'>
@@ -41,6 +49,17 @@ const Home = () => {
                 <p className="text-center">Best Voted Racipies on Our Collection</p>
                 <div className="flex gap-4">
                     
+                </div>
+            </section>
+            <section className='py-8'>
+                <p className='font-secondary font-bold text-3xl text-center'>Our Best Chefs</p>
+                <p className="text-center">Our Most popular chefs based on the votes of users who tried their recipies</p>
+                <div className="flex gap-4">
+                    {
+                        allChefs.forEach(chef=>{
+                            console.log(chef);
+                        })
+                    }
                 </div>
             </section>
         </div>

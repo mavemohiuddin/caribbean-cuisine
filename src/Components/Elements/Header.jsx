@@ -35,9 +35,9 @@ const Header = () => {
             <div className='max-w-[1170px] w-full mx-auto flex items-center justify-between gap-4'>
                 <Link to="/" className='flex-1 relative'>
                     <div className='relative max-w-max'>
-                        <p className='font-design text-xl md:text-3xl text-purple-300'>Carribean Cuisine</p>
+                        <p className='font-design text-xl md:text-3xl text-purple-300'>Caribbean Cuisine</p>
                         <div className='pulse absolute bottom-0 left-0 w-full h-1/2 overflow-hidden'>
-                            <p className='font-design text-xl md:text-3xl absolute bottom-0'>Carribean Cuisine</p>
+                            <p className='font-design text-xl md:text-3xl absolute bottom-0'>Caribbean Cuisine</p>
                         </div>
                     </div>
                 </Link>
