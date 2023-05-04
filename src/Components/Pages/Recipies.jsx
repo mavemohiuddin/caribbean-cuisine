@@ -98,7 +98,7 @@ const Recipies = () => {
         } else {
             notify("You Already Saved this Recipe")
         }
-        e.target.classList.add("text-pink-400")
+        e.target.classList.add("text-pink-400");
     }
 
     return (
