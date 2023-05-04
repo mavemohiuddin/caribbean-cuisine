@@ -4,14 +4,27 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { homeHeroBannerPc } from '../../assets/images';
 import ChefCards from '../Elements/ChefCards';
+import SpinnerBar from '../Elements/SpinnerBar';
 
 const Home = () => {
     const [allChefs, setAllChefs] = useState([]);
 
+    const loadSpinner = () => {
+        document.querySelector("#spinner").classList.remove("hidden");
+        document.querySelector("#chef_list").classList.add("hidden");
+        setTimeout(()=>{
+            document.querySelector("#chef_list").classList.remove("hidden");
+            document.querySelector("#spinner").classList.add("hidden");
+        },1000)
+    }
+
     useEffect(()=>{
         fetch("https://caribbean-cuisine-server-mavemohiuddin.vercel.app/chef")
             .then(res => res.json())
-            .then(data => setAllChefs(data))
+            .then(data => {
+                setAllChefs(data);
+                loadSpinner();
+            })
     },[])
 
     return (
@@ -56,14 +69,17 @@ const Home = () => {
             <section className='py-8'>
                 <p className='font-secondary font-bold text-3xl text-center'>Our Best Chefs</p>
                 <p className="text-center">Our Most popular chefs based on the votes of users who tried their recipies</p>
-                <div id="chef_list" className="grid grid-cols-3 gap-4 py-8">
-                    {
-                        allChefs.map(chef=>{
-                            return (
-                                <ChefCards key={chef.id} chef={chef}></ChefCards>
-                            )
-                        })
-                    }
+                <div className='min-h-[200px] relative'>
+                    <div id="chef_list" className="grid grid-cols-3 gap-4 py-8">
+                        {
+                            allChefs.map(chef=>{
+                                return (
+                                    <ChefCards key={chef.id} chef={chef}></ChefCards>
+                                )
+                            })
+                        }
+                    </div>
+                    <SpinnerBar></SpinnerBar>
                 </div>
             </section>
         </div>

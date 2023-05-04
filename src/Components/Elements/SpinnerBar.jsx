@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import React from 'react';
 
-const SpinnerBar = () => {
+const SpinnerBar = ({visible}) => {
     return (
         <div id="spinner" className='px-8 py-4 absolute inset-0 z-10 isolate flex justify-center flex-col hidden'>
             <div className='absolute inset-0 bg-white opacity-80 -z-10'></div>

@@ -18,6 +18,7 @@ const Recipies = () => {
     const notify = (message) => toast(message);
 
     useEffect(()=>{
+        document.querySelector("#spinner").classList.remove("hidden");
         fetch("https://caribbean-cuisine-server-mavemohiuddin.vercel.app/recipe")
         .then(res => res.json())
         .then(data => {
@@ -27,8 +28,24 @@ const Recipies = () => {
                 if (localRecipies != null) {
                     setSavedRecipies(JSON.parse(localRecipies))
                 }
+                
+            // =============================================================== Slow Loading data for Effect
+            document.querySelector("#recipe_cotnainer").classList.add("hidden");
+            setTimeout(()=>{
+                document.querySelector("#recipe_cotnainer").classList.remove("hidden");
+                document.querySelector("#spinner").classList.add("hidden");
+            },3000)
         })
     },[])
+
+    const loadSpinner = () => {
+        document.querySelector("#spinner").classList.remove("hidden");
+        document.querySelector("#recipe_cotnainer").classList.add("hidden");
+        setTimeout(()=>{
+            document.querySelector("#recipe_cotnainer").classList.remove("hidden");
+            document.querySelector("#spinner").classList.add("hidden");
+        },1000)
+    }
 
     const optionSelect = (e) => {
         document.querySelector("#selectOutput").innerHTML = (e.target.getAttribute("data-value"));
@@ -36,6 +53,7 @@ const Recipies = () => {
         document.querySelector("#selectIcon").classList.remove("rotate-180");
         e.stopPropagation();
         setSelectedChef(e.target.getAttribute("data-value"));
+        loadSpinner();
     }
     const optionToggle = () => {
         document.querySelector("#selectOptions").classList.toggle("hidden");
@@ -84,8 +102,9 @@ const Recipies = () => {
     }
 
     return (
-        <div>
+        <div className='relative min-h-[300px]'>
             <ToastContainer></ToastContainer>
+            <SpinnerBar></SpinnerBar>
             <div className="flex justify-center gap-4 mb-8">
                 <p className='font-secondary text-2xl'>You Are Viewing:</p>
                 <div onClick={optionToggle} className='cursor-pointer relative w-40 bg-white border border-gray-200 grid place-content-center select-none'>
@@ -103,8 +122,7 @@ const Recipies = () => {
                     </div>
                 </div>
             </div>
-            <div className='grid grid-cols-3 gap-4'>
-                <SpinnerBar></SpinnerBar>
+            <div id="recipe_cotnainer" className='grid grid-cols-3 gap-4'>
                 {selectedRecipe.map(recipe=> {
                     return(
                         <div key={recipe.id} className="border border-gray-300 rounded-lg overflow-hidden bg-white">
