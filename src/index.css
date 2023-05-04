@@ -17,6 +17,15 @@ button:disabled {
 button:disabled > *.absolute {
     background: gray!important;
 }
+.custom_ellipse {
+    display: -webkit-box!important;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+.add_comma:not(:last-child)::after {
+    content: ",";
+    margin-right: 5px;
+}
 @keyframes flow {
     0% {left: -20%;}
     50% {left: 90%}

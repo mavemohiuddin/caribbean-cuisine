@@ -12,10 +12,8 @@ const Header = () => {
     useEffect(()=>{
         if (navShown) {
             document.querySelector("#nav_menu").classList.remove("-translate-x-[120%]");
-            console.log(navShown);
         } else {
             document.querySelector("#nav_menu").classList.add("-translate-x-[120%]");
-            console.log(navShown);
         }
     }, [navShown])
 

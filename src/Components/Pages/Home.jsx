@@ -1,17 +1,19 @@
 /* eslint-disable no-unused-vars */
-import { BanknotesIcon, CircleStackIcon, ShoppingBagIcon } from '@heroicons/react/24/solid';
+import { BanknotesIcon, CakeIcon, CircleStackIcon, HandThumbUpIcon, ShoppingBagIcon } from '@heroicons/react/24/solid';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { homeHeroBannerPc } from '../../assets/images';
+import ChefCards from '../Elements/ChefCards';
 
 const Home = () => {
     const [allChefs, setAllChefs] = useState([]);
 
     useEffect(()=>{
-        fetch("./Chefs.json")
-            .then(res=>res.json())
-            .then(data=>setAllChefs(data))
+        fetch("https://caribbean-cuisine-server-mavemohiuddin.vercel.app/chef")
+            .then(res => res.json())
+            .then(data => setAllChefs(data))
     },[])
+
     return (
         <div className=''>
             <section className='h-96 bg-white flex shadow-lg rounded-xl overflow-hidden relative'>
@@ -54,10 +56,12 @@ const Home = () => {
             <section className='py-8'>
                 <p className='font-secondary font-bold text-3xl text-center'>Our Best Chefs</p>
                 <p className="text-center">Our Most popular chefs based on the votes of users who tried their recipies</p>
-                <div className="flex gap-4">
+                <div id="chef_list" className="grid grid-cols-3 gap-4 py-8">
                     {
-                        allChefs.forEach(chef=>{
-                            console.log(chef);
+                        allChefs.map(chef=>{
+                            return (
+                                <ChefCards key={chef.id} chef={chef}></ChefCards>
+                            )
                         })
                     }
                 </div>
