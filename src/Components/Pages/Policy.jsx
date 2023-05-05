@@ -9,6 +9,9 @@ const Policy = () => {
             <br /><br />
             <span className="text-xl font-bold mb-8">Information We Collect</span><br />
             When you use our website or services, we may collect the following types of personal information:
+            <br /><br />
+            <span className="text-xl font-bold mb-8">Information We Collect</span><br />
+            When you use our website or services, we may collect the following types of personal information:
         </div>
     );
 };
