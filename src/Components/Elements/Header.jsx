@@ -4,8 +4,12 @@ import { Link, NavLink } from 'react-router-dom';
 import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react';
 import { useEffect } from 'react';
+import GradientButton from './GradientButton';
+import { useContext } from 'react';
+import { AuthContext } from './AuthProvider';
 
 const Header = () => {
+    const {user, signOutUser} = useContext(AuthContext);
 
     const [navShown, setNavShown] = useState(false);
 
@@ -28,6 +32,7 @@ const Header = () => {
         document.querySelector("#profile_info").style.display = "none";
         document.querySelector("#name_short").style.display = "block";
     }
+    console.log(user);
     return (
         <div className='sticky top-0 left-0 w-full px-4 h-[60px] flex items-center bg-[#ff6b00] z-20'>
             <div className='max-w-[1170px] w-full mx-auto flex items-center justify-between gap-4'>
@@ -44,6 +49,9 @@ const Header = () => {
                     <nav className='w-full'>
                         <ul className='flex gap-2 flex-col md:flex-row justify-center w-full'>
                             <li>
+                                <NavLink onClick={()=>setNavShown(false)} to="/" className={({isActive})=>isActive?activeClassList:inactiveClassList}>Home</NavLink>
+                            </li>
+                            <li>
                                 <NavLink onClick={()=>setNavShown(false)} to="/recipies" className={({isActive})=>isActive?activeClassList:inactiveClassList}>Recipies</NavLink>
                             </li>
                             <li>
@@ -56,19 +64,21 @@ const Header = () => {
                     </nav>
                 </div>
 
-                <div className='flex-1 flex relative z-10'>
+                <div className='flex-1 flex items-center relative z-10'>
                     <Link onMouseEnter={showProfile} onMouseLeave={hideProfile} to="login" className='flex items-center justify-end gap-1 relative max-w-max ml-auto'>
                         <div className='relative border-white rounded-full border-4'>
-                            <UserCircleIcon className="h-10 w-10 text-orange-200" />
-                            <p id='name_short' className='text-xs text-center absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 rounded-full bg-white capitalize'>Guest</p>
+                            {user? <><img src={user.photoURL} className="h-10 w-10 rounded-full" /></> :
+                            <><UserCircleIcon className="h-10 w-10 text-orange-200" />
+                            </>}
                         </div>
                         
                         <div id="profile_info" className='absolute top-1/2 left-1/2 translate-y-4 -translate-x-1/2 bg-white p-4 w-48 rounded shadow-md pointer-events-none hidden'>
-                            <UserCircleIcon className="h-24 w-24 text-orange-500 mx-auto" />
-                            <p className='font-bold text-center'>Guest User</p>
-                            <p className='italic text-center text-xs'>@guest</p>
+                            {user ? <img src={user.photoURL} className="h-24 w-24 mx-auto rounded-full" /> : <UserCircleIcon className="h-24 w-24 text-orange-500 mx-auto" />}
+                            {user? <p className='font-bold text-center capitalize'>{user.displayName}</p>: <p className='font-bold text-center capitalize'>Guest</p>}
+                            
                         </div>
                     </Link>
+                    {user? <button onClick={signOutUser}><GradientButton text="Log Out" extraClass="ml-2"></GradientButton></button> : <Link to="/login"><GradientButton text="Log in" extraClass="ml-6"></GradientButton></Link>}
                     <button onClick={()=>setNavShown(!navShown)} className='px-2 ml-2 md:hidden'>
                         <Bars3Icon className='h-7 w-7' />
                     </button>

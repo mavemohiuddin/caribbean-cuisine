@@ -6,13 +6,14 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { homeHeroBannerPc } from '../../assets/images';
 import ChefCards from '../Elements/ChefCards';
+import GradientButton from '../Elements/GradientButton';
 import RecipeCards from '../Elements/RecipeCards';
 import SpinnerBar from '../Elements/SpinnerBar';
 
 const Home = () => {
     const [allChefs, setAllChefs] = useState([]);
     const [allrecipies, setAllrecipies] = useState([]);
-    const [recipyOfTheDay, setRecipyOfTheDay] = useState([]);
+    const [recipeOfTheDay, setRecipeOfTheDay] = useState([]);
 
     const loadSpinner = () => {
         document.querySelector("#spinner").classList.remove("hidden");
@@ -24,14 +25,11 @@ const Home = () => {
     }
 
     useEffect(()=>{
-        setRecipyOfTheDay(allrecipies[0]);
-    },[allrecipies])
-
-    useEffect(()=>{
         fetch("https://caribbean-cuisine-server-mavemohiuddin.vercel.app/recipe")
             .then(res => res.json())
             .then(data => {
                 setAllrecipies(data);
+                setRecipeOfTheDay(data[0])
                 loadSpinner();
             })
     },[])
@@ -47,6 +45,7 @@ const Home = () => {
 
     return (
         <div className=''>
+            {console.log(recipeOfTheDay)}
             <section className='h-96 bg-white flex shadow-lg rounded-xl overflow-hidden relative'>
                 <img src={homeHeroBannerPc} className="h-full w-full object-cover" />
                 <div className='flex flex-col gap-2 items-center justify-center absolute top-0 right-0 h-full w-full isolate text-white'>
@@ -74,85 +73,23 @@ const Home = () => {
                 <p className='font-secondary font-bold text-3xl text-center'>Our Best Chefs</p>
                 <p className="text-center">Our Most popular chefs based on the votes of users who tried their recipies</p>
                 <div className='min-h-[200px] relative'>
-                    <div id="chef_list" className="grid grid-cols-3 gap-4 py-8">
-                    <div className='relative overflow-hidden flex-1'>
-                        <img src={allrecipies[0].banner_image} alt="" className='h-96 w-full object-cover'/>
-                    </div>
-                    <div className='flex-1'>
-                        <p className='text-6xl font-extralight font-secondary'>{allrecipies[0].name} <span className='text-3xl'>({allrecipies[0].rating}✰)</span></p>
-                        <div className="flex gap-12 mt-4">
-                        <div title='Number of Likes' className="flex gap-1 items-center">
-                            <HandThumbUpIcon className='h-5 w-5 text-orange-600' />
-                                <p className='font-bold text-sm'>{allrecipies[0].likes}</p>
-                            </div>
-                            <p>Date Invented: <strong>{allrecipies[0].date_invented}</strong></p>
-                        </div>
-                        <ul className='text-xl mt-6 list-decimal list-inside'><strong>Ingredients:</strong> {allrecipies[0].ingredients.map(item=>{
-                            return (
-                                <li className='text-base'>{item}</li>
-                            )
-                        })}</ul>
-                        <div>
-                            <p>Follow From:</p>
-                            <div className="flex gap-4">
-                                {
-                                    allrecipies[0].chef_name.map( chef=> {
-                                        return (
-                                            <Link to={`/chefs?${chef.replace(" ", "_")}`} className='px-2 py-1 border mx-1 my-2 whitespace-nowrap bg-orange-200 text-sm'>{chef}</Link>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </div>
-                    </div>
+                    <div id="chef_list" className="grid grid-cols-1 md:grid-cols-3 gap-4 py-8">
+                        {
+                            allChefs.map(chef=>{
+                                return (
+                                    <ChefCards key={chef.id} chef={chef}></ChefCards>
+                                )
+                            })
+                        }
                     </div>
                     <SpinnerBar></SpinnerBar>
                 </div>
             </section>
-            <section className='py-8'>
-                <p className='font-secondary font-bold text-3xl text-center'>Recipe of the Day</p>
-                <p className="text-center">Selected from our List of Racipes by the users</p>
-                <div className="flex gap-4">
-                    {
-                        return (
-                            <div className='relative overflow-hidden flex-1'>
-                        <img src={allrecipies[0].banner_image} alt="" className='h-96 w-full object-cover'/>
-                    </div>
-                    <div className='flex-1'>
-                        <p className='text-6xl font-extralight font-secondary'>{allrecipies[0].name} <span className='text-3xl'>({allrecipies[0].rating}✰)</span></p>
-                        <div className="flex gap-12 mt-4">
-                        <div title='Number of Likes' className="flex gap-1 items-center">
-                            <HandThumbUpIcon className='h-5 w-5 text-orange-600' />
-                                <p className='font-bold text-sm'>{allrecipies[0].likes}</p>
-                            </div>
-                            <p>Date Invented: <strong>{allrecipies[0].date_invented}</strong></p>
-                        </div>
-                        <ul className='text-xl mt-6 list-decimal list-inside'><strong>Ingredients:</strong> {allrecipies[0].ingredients.map(item=>{
-                            return (
-                                <li className='text-base'>{item}</li>
-                            )
-                        })}</ul>
-                        <div>
-                            <p>Follow From:</p>
-                            <div className="flex gap-4">
-                                {
-                                    allrecipies[0].chef_name.map( chef=> {
-                                        return (
-                                            <Link to={`/chefs?${chef.replace(" ", "_")}`} className='px-2 py-1 border mx-1 my-2 whitespace-nowrap bg-orange-200 text-sm'>{chef}</Link>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </div>
-                    </div>
-                        )
-                    }
-                </div>
-            </section>
+            
             <section className='py-8'>
                 <p className='font-secondary font-bold text-3xl text-center'>Top Recipies</p>
                 <p className="text-center">Best Voted Racipies on Our Collection</p>
-                <div className="grid grid-cols-3 my-8 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 my-8 gap-4">
                     {
                         allrecipies.slice(0,3).map(recipe=>{
                             return (
@@ -160,6 +97,50 @@ const Home = () => {
                             )
                         })
                     }
+                </div>
+            </section>
+
+            <section className='py-8'>
+                <p className='font-secondary font-bold text-3xl text-center'>Contact Us</p>
+                <p className="text-center">Be sure to reach out to us! Someone will hopefully respond, as soon as possible.</p>
+                <div className='mt-6 md:flex gap-12'>
+                    <div className="flex-1 mb-8 md:mb-0">
+                        <p className="font-bold text-2xl font-secondary underline">Our Office</p>
+                        <div className="flex gap-2 mt-4">
+                            <p><span className="italic mr-2">Suit</span>#B,</p>
+                            <p><span className="italic mr-2">Floor</span>13</p>
+                        </div>
+                        <div className="flex gap-2">
+                            <p><span className="italic mr-2">House</span>42A,</p>
+                            <p><span className="italic mr-2">Block</span>9C</p>
+                        </div>
+                        <p className="mt-4">BuckingHam Street, Central Town</p>
+                        <p className="mt-1">Cuban Central, Bahama</p>
+                        <div className="mt-8 flex justify-between">
+                            <button>
+                                <GradientButton text="Book a Meeting"></GradientButton>
+                            </button>
+                            <button>
+                                <GradientButton text="Book a Tour"></GradientButton>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="flex-1">
+                        <p className="font-bold text-2xl font-secondary underline">Reach Us Online</p>
+                        <div className='flex flex-col items-start'>
+                            <label htmlFor="subject" className='w-full'>
+                                Subject
+                                <input id="subject" type="text"  className='border py-2 px-4 border-gray-300 w-full'/>
+                            </label>
+                            <label htmlFor="message" className='w-full'>
+                                Message
+                                <input id="message" type="text"  className='border py-2 px-4 border-gray-300 w-full h-24' />
+                            </label>
+                            <button onClick="mailto:mohiuddinkhasherhat@gmail.com" className='mt-4'>
+                                <GradientButton text="Send Email"></GradientButton>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
             

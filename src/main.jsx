@@ -19,6 +19,8 @@ import About from './Components/Pages/About';
 import Contact from './Components/Pages/Contact';
 import Terms from './Components/Pages/Terms';
 import Policy from './Components/Pages/Policy';
+import AuthProvider from './Components/Elements/AuthProvider';
+import PrivateRoute from './Components/Elements/PrivateRoute';
 
 const router = createBrowserRouter([
     {
@@ -39,7 +41,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile",
-                element: <Profile></Profile>
+                element: <PrivateRoute><Profile></Profile></PrivateRoute>
             },
             {
                 path: "/blogs",
@@ -47,11 +49,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/recipies",
-                element: <Recipies></Recipies>
+                element: <PrivateRoute><Recipies></Recipies></PrivateRoute>
             },
             {
                 path: "/chefs",
-                element: <Chefs></Chefs>
+                element: <PrivateRoute><Chefs></Chefs></PrivateRoute>
             },
             {
                 path: "/about",
@@ -81,5 +83,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     // <React.StrictMode>
     //     <RouterProvider router={router} />
     // </React.StrictMode>,
-    <RouterProvider router={router} />
+    <AuthProvider>
+        <RouterProvider router={router} />
+    </AuthProvider>
 )

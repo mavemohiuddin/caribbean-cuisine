@@ -1,16 +1,23 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import GradientButton from '../Elements/GradientButton';
-import InputLabel from '../Elements/InputLabel';
 import SpinnerBar from '../Elements/SpinnerBar';
+import { AuthContext } from '../Elements/AuthProvider';
+
 
 const Register = () => {
     const navigate = useNavigate();
     const [registerMessage, setRegisterMessage] = useState(""); // ====== Submission Confirmation message
     const [registerMessageColor, setRegisterMessageColor] = useState("");
-    const registerMessageClassList = `${registerMessageColor} text-sm mt-4 text-center`
+    const registerMessageClassList = `${registerMessageColor} text-sm mt-4 text-center`;
+
+
+    const { createUser, updateUser, googleSignIn, gitSignIn } = useContext(AuthContext)
+
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
 
     const submitMessage = message => {
         setTimeout(()=>{
@@ -19,19 +26,7 @@ const Register = () => {
     }
 
     const validate = (e) => {
-        if (e.target.email.value.length == 0) {
-            submitMessage("Please fill all the fields");
-            setRegisterMessageColor("text-red-400");
-            return false;
-        } else if (e.target.username.value.length == 0) {
-            submitMessage("Please fill all the fields");
-            setRegisterMessageColor("text-red-400");
-            return false;
-        } else if (e.target.name.value.length == 0) {
-            submitMessage("Please fill all the fields");
-            setRegisterMessageColor("text-red-400");
-            return false;
-        } else if (e.target.password.value.length < 6) {
+        if (e.target.password.value.length < 6) {
             submitMessage("Password Must be at least 6 characters");
             setRegisterMessageColor("text-red-400");
             return false;
@@ -53,21 +48,41 @@ const Register = () => {
                 setRegisterMessageColor("text-red-400");
                 return false;
             } else {
-                submitMessage("Account Created! Redirecting to Profile");
-                setRegisterMessageColor("text-green-400");
                 return true;
             }
         } else {
-            submitMessage("Account Created! Redirecting to Profile");
-            setRegisterMessageColor("text-green-400");
             return true;
         }
     }
 
+    const submitGoogleSignIn = (e) => {
+        e.preventDefault();
+        googleSignIn()
+        .then()
+        .catch()
+    }
+    const submitGitHubSignIn = (e) => {
+        e.preventDefault();
+        gitSignIn()
+        .then()
+        .catch()
+    }
+
     const submission = (e) => {
         e.preventDefault();
-        setRegisterMessage("");
 
+        //  ======================================================================= Reseting data
+        setRegisterMessage("");
+        setError(null)
+        setSuccess(null)
+        
+        //  ==================================================================== USer Credentials
+        const name = e.target.name.value;
+        const email = e.target.email.value;
+        const password = e.target.password.value;
+        const photo = e.target.photo.value;
+
+        // ============================================================================= Spinner
         document.querySelector("#spinner").classList.remove("hidden");
         e.target.querySelector("[type='submit']").setAttribute("disabled", "disabled");
         setTimeout(()=>{
@@ -75,10 +90,34 @@ const Register = () => {
             e.target.querySelector("[type='submit']").removeAttribute("disabled");
         },3000)
 
+        // ========================================================================== Validation
         if (validate(e)) {
-            setTimeout(()=>{
-                navigate("/profile")
-            },5000)
+            
+            createUser(email, password)
+            .then(result => {
+                console.log(email, password);
+                e.target.reset()
+                setRegisterMessage("User account has been created successfully")
+                updateUser(name, photo);
+
+                navigate('/profile', { replace: true })
+
+            })
+            .catch(error => {
+                setError(error.code)
+                console.log(error);
+
+                if (error.code == "auth/invalid-email") {
+                    setRegisterMessage("Invalid Email. Please Try Again");
+                    setRegisterMessageColor("text-red-600");
+                } else if (error.code == "auth/email-already-in-use") {
+                    setRegisterMessage("User Already Exists!");
+                    setRegisterMessageColor("text-red-600");
+                } else {
+                    setRegisterMessage("Something went wrong! Please Try Again.");
+                    setRegisterMessageColor("text-red-600");
+                }
+            })
         } 
     }
 
@@ -93,24 +132,39 @@ const Register = () => {
 
             <form onSubmit={submission} className='mt-8'>
                 <div className='relative py-2'>
-                    <InputLabel name="email" label="Email"></InputLabel>
-                    <InputLabel name="password" label="Password"></InputLabel>
-                    <InputLabel name="name" label="Name"></InputLabel>
-                    <InputLabel name="username" label="Username"></InputLabel>
-                    <div className='flex flex-wrap gap-2 mt-2'>
-                        <p className='w-full'>Profile Picture</p>
-                        <div className='w-[100px] rounded-full overflow-hidden flex items-center justify-center relative border border-gray-400'>
-                            <input name="image" type="file" className="absolute py-12 opacity-0 cursor-pointer"></input>
-                            <p className='pointer-events-none'>Select File</p>
-                        </div>
-                        <InputLabel name="photo" label="Image URL" extraClass="mt-0 flex-1"></InputLabel>
-                    </div>
+
+                    <label htmlFor="email" className='flex items-center'>
+                        <p className='flex-1'>Email:</p>
+                        <input type="email" name="email" required className='border ml-2 w-4/5 border-black px-4 py-1 rounded-full' />
+                    </label>
+                    <label htmlFor="password" className='flex items-center mt-2'>
+                        <p className='flex-1'>Password:</p>
+                        <input type="password" name="password" required className='border ml-2 w-4/5 border-black px-4 py-1 rounded-full' />
+                    </label>
+                    <label htmlFor="name" className='flex items-center mt-2'>
+                        <p className='flex-1'>Name:</p>
+                        <input type="text" name="name" required className='border ml-2 w-4/5 border-black px-4 py-1 rounded-full' />
+                    </label>
+                    <label htmlFor="photo" className='block mt-4'>
+                        <p className='flex-1'>Profile picture URL:</p>
+                        <input type="text" name="photo" required className='border ml-2 w-full border-black px-4 py-1 rounded-full' />
+                    </label>
                     <SpinnerBar></SpinnerBar>
                 </div>
 
-                <div className='flex items-center justify-between mt-4'>
+                <div className='flex items-center justify-center mt-4'>
                     <GradientButton type="submit" text="Sign Up" extraClass=""></GradientButton>
                 </div>
+                
+                <div className='border-t border-gray-400 pt-4 mt-4'>
+                    <button onClick={submitGoogleSignIn} className='block w-full px-8 py-2 rounded border bg-gray-200 border-gray-300'>
+                        <p>Login with Google</p>
+                    </button>
+                    <button onClick={submitGitHubSignIn} className='block w-full px-8 py-2 rounded border bg-gray-200 border-gray-300 mt-4'>
+                        <p>Login with Git-Hub</p>
+                    </button>
+                </div>
+
                 <p className={registerMessageClassList}>{registerMessage}</p>
             </form>
         </div>
