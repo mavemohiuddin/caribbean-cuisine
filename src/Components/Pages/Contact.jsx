@@ -4,7 +4,8 @@ import React from 'react';
 const Contact = () => {
     return (
         <div>
-            This is Contact Us page
+            <p className="text-center font-bold text-4xl mb-12">Contact Us</p>
+            You Can find contact information at the home page.
         </div>
     );
 };

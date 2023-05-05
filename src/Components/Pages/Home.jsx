@@ -45,7 +45,6 @@ const Home = () => {
 
     return (
         <div className=''>
-            {console.log(recipeOfTheDay)}
             <section className='h-96 bg-white flex shadow-lg rounded-xl overflow-hidden relative'>
                 <img src={homeHeroBannerPc} className="h-full w-full object-cover" />
                 <div className='flex flex-col gap-2 items-center justify-center absolute top-0 right-0 h-full w-full isolate text-white'>
